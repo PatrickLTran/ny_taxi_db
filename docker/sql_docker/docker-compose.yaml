@@ -1,0 +1,25 @@
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB= airflow
+    volumes:
+      - "C:\Users\patri\OneDrive\Desktop\docker\data_engineering\datasets\ny_taxi:/var/lib/postgresql/data:rw"
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "U", "airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+    
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "8080:80"
+    
