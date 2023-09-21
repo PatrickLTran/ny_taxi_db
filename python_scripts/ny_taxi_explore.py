@@ -22,27 +22,22 @@ print(pd.io.sql.get_schema(df, name='green_taxi_data', con=engine))
 import pyarrow.parquet as pq
 import psycopg2
 
+#green taxi
 pq_file = pq.ParquetFile("/home/docker/data_engineering/data_raw/green_tripdata_2023-01.parquet")
-conn = psycopg2.connect(database="ny_taxi", 
-                        user="root",
-                        password="root")
 
 chunks = 100000
 for i in pq_file.iter_batches(batch_size=chunks):
-    df = i.to_pandas()    
-    
-
-
-
-
+    df = i.to_pandas()
+    df.to_sql(name="green_taxi",con=engine, if_exists="replace")
 
 #%%
+# yellow taxi
+pq_file = pq.ParquetFile("/home/docker/data_engineering/data_raw/yellow_tripdata_2023-01.parquet")
 
-chunksize = 100000
+chunks = 100000
+for i in pq_file.iter_batches(batch_size=chunks):
+    df = i.to_pandas()
+    df.to_sql(name="yellow_taxi",con=engine, if_exists="replace")
+    
 
-for i in range(pq_file.num_row_groups):
-    row_data = pq_file.read_row_group(i)
-
-
-
-# %%
+# %%s
